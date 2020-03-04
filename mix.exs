@@ -3,7 +3,7 @@ defmodule ServiceGateway.MixProject do
 
   def project do
     [
-      app: :service_gateway,
+      app: ServiceGateway.Application,
       version: "0.1.0",
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
@@ -14,7 +14,7 @@ defmodule ServiceGateway.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:logger, :poolboy],
       mod: {ServiceGateway.Application, []}
     ]
   end
@@ -22,7 +22,8 @@ defmodule ServiceGateway.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:plug_cowboy, "~> 2.1"}
+      {:plug_cowboy, "~> 2.1"},
+      {:poolboy, "~> 1.5"}
     ]
   end
 end
