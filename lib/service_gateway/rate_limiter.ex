@@ -1,9 +1,22 @@
 defmodule ServiceGateway.RateLimiter do
   @moduledoc false
-  import ServiceGateway.Application, only: [rate_limiter_pool_name: 0]
+  import ServiceGateway.Application, only: [rate_limit_cache_name: 0]
 
-  def calculate_square(value, sleep) when is_integer(value) and is_integer(sleep) do
-    {:ok, result} = :poolboy.transaction(rate_limiter_pool_name(), fn p -> GenServer.call(p, {value, sleep}) end)
+  @spec try_token(ip: String.t()) :: boolean()
+  def try_token(ip) do
+    {:ok, result} = Cachex.execute()
     result
   end
+
+  @spec windows_number() :: integer()
+  defp windows_number,
+    do: Application.fetch_env!(ServiceGateway.Application, :rate_limiting)[:windows]
+
+  @spec window_length_millis() :: integer()
+  defp window_length_millis,
+    do: Application.fetch_env!(ServiceGateway.Application, :rate_limiting)[:window_length_millis]
+
+  @spec limit() :: integer()
+  defp limit,
+    do: Application.fetch_env!(ServiceGateway.Application, :rate_limiting)[:limit]
 end

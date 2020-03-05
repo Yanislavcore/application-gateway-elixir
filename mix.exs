@@ -14,7 +14,7 @@ defmodule ServiceGateway.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger, :poolboy],
+      extra_applications: [:logger, :cachex],
       mod: {ServiceGateway.Application, []}
     ]
   end
@@ -23,7 +23,8 @@ defmodule ServiceGateway.MixProject do
   defp deps do
     [
       {:plug_cowboy, "~> 2.1"},
-      {:poolboy, "~> 1.5"}
+      {:cachex, "~> 3.2"},
+      {:mojito, "~> 0.6.1"}
     ]
   end
 end
