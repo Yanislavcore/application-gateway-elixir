@@ -16,18 +16,20 @@ defmodule ServiceGateway.SelectorWorkerTest do
       %Destination{id: "foo-1", url: "http://bar1/", weight: 2},
       %Destination{id: "foo-2", url: "http://bar2/", weight: 3}
     ]
+
     proxy_pass = %ProxyPass{name: "foo", route_info: "bar", destinations: destinations}
 
     [f, s, t] = destinations
-    expected = [f, s, s, t, t, t]
-               |> List.duplicate(5)
-               |> List.flatten()
+
+    expected =
+      [f, s, s, t, t, t]
+      |> List.duplicate(5)
+      |> List.flatten()
 
     for i <- expected do
       {:ok, dest, call} = SelectorWorker.select_destination(selector, proxy_pass)
       assert dest == i
       assert is_function(call)
     end
-
   end
 end

@@ -8,7 +8,7 @@ defmodule ServiceGateway.MixProject do
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
       aliases: [test: "test --no-start"],
-      elixirc_paths: elixirc_paths(Mix.env),
+      elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps()
     ]
   end
@@ -32,6 +32,7 @@ defmodule ServiceGateway.MixProject do
       {:mock, "~> 0.3.0", only: :test}
     ]
   end
-  defp elixirc_paths(:test), do: ["lib","test/mocks"]
+
+  defp elixirc_paths(:test), do: ["lib", "test/mocks"]
   defp elixirc_paths(_), do: ["lib"]
 end

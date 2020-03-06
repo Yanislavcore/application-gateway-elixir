@@ -10,13 +10,19 @@ defmodule ServiceGateway.Selector do
   Selects one of the available destinations from list and returns it `{:ok, "<url>"}`.
   If all of the destinations are unavailable returns error `{:error, "Destinations are unavailable"}`
   """
-  @spec select_destination(ProxyPass.t(), timeout()) :: {:ok, Destination.t()} | {:error, String.t()}
+  @spec select_destination(ProxyPass.t(), timeout()) ::
+          {:ok, Destination.t()} | {:error, String.t()}
   def select_destination(proxy_pass, timeout \\ 500) do
     start = System.monotonic_time(:millisecond)
+
     :poolboy.transaction(
       selector_pool_name(),
       fn s ->
-        SelectorWorker.select_destination(s, proxy_pass, timeout - (System.monotonic_time(:millisecond) - start))
+        SelectorWorker.select_destination(
+          s,
+          proxy_pass,
+          timeout - (System.monotonic_time(:millisecond) - start)
+        )
       end,
       timeout
     )
@@ -26,9 +32,8 @@ defmodule ServiceGateway.Selector do
   def notify_destination_status(destination, status) do
     :poolboy.transaction(
       selector_pool_name(),
-      fn s -> SelectorWorker.notify_destination_status(s, destination, status)end,
+      fn s -> SelectorWorker.notify_destination_status(s, destination, status) end,
       500
     )
   end
-
 end

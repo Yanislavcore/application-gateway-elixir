@@ -8,7 +8,8 @@ defmodule ServiceGateway.SelectorWorker do
   Selects one of the available destinations from list and returns it `{:ok, "<url>", call_wrapper}`.
   If all of the destinations are unavailable returns error `{:error, "Destinations are unavailable"}`
   """
-  @spec select_destination(ProxyPass.t(), timeout()) :: {:ok, Destination.t()} | {:error, String.t()}
+  @spec select_destination(ProxyPass.t(), timeout()) ::
+          {:ok, Destination.t()} | {:error, String.t()}
   def select_destination(server, proxy_pass, timeout \\ 500) do
     GenServer.call(server, proxy_pass, timeout)
   end
@@ -39,7 +40,7 @@ defmodule ServiceGateway.SelectorWorker do
   end
 
   @impl true
-  def handle_cast(proxy_pass, state) do
+  def handle_cast(_, state) do
     {:noreply, state}
   end
 

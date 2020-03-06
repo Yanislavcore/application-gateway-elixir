@@ -27,7 +27,7 @@ defmodule ServiceGateway.Application do
     {
       Plug.Cowboy,
       scheme: :http,
-      plug: ServiceGateway.Plug,
+      plug: ServiceGateway.Controller,
       options: [
         port: port
       ]

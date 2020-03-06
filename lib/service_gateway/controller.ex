@@ -1,8 +1,8 @@
-defmodule ServiceGateway.Plug do
+defmodule ServiceGateway.Controller do
   @moduledoc false
 
   import Plug.Conn
-  import Logger
+  require Logger
   alias ServiceGateway.Router
   alias ServiceGateway.Selector
   alias ServiceGateway.ProxyPassClient
@@ -13,8 +13,13 @@ defmodule ServiceGateway.Plug do
   end
 
   def call(conn, _opts) do
+    Logger.debug("Incoming request " <> inspect(conn))
+
     case Router.find_proxy_pass(conn.path_info) do
-      {:ok, pass} -> call_proxy_pass(conn, pass)
+      {:ok, pass} ->
+        Logger.debug("Route found: " <> inspect(pass))
+        call_proxy_pass(conn, pass)
+
       {:error, :not_found} ->
         Logger.warn("Calling for not existed route.")
         response_error(conn, 404, "Not found")
@@ -24,17 +29,25 @@ defmodule ServiceGateway.Plug do
   defp call_proxy_pass(conn, pass) do
     case Selector.select_destination(pass) do
       {:ok, dest} ->
+        Logger.debug("Destination selected: " <> inspect(dest))
         resp = ProxyPassClient.request_proxy_pass(conn, pass, dest)
+
         case resp do
-          {:ok, resp} -> send_proxy_response(conn, resp)
+          {:ok, resp} ->
+            send_proxy_response(conn, resp)
+
           {:error, %Mojito.Error{reason: :timeout}} ->
             Logger.warn("Error during call. Proxy pass timeout.")
             response_error(conn, 504, "Gateway Timeout")
+
           {:error, err} ->
             Logger.error("Error during call #{err.reason}.")
             response_error(conn, 500, "Internal Server Error")
         end
-      {:error, _} -> response_error(conn, 503, "Service Unavailable")
+
+      {:error, _} ->
+        Logger.warn("All destinations for the '#{conn.name}' are unavailable!")
+        response_error(conn, 503, "Service Unavailable")
     end
   end
 
