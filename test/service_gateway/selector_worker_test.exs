@@ -23,10 +23,11 @@ defmodule ServiceGateway.SelectorWorkerTest do
                |> List.duplicate(5)
                |> List.flatten()
 
-    actual = for _ <- 0..29 do
-      elem(SelectorWorker.select_destination(selector, proxy_pass), 1)
+    for i <- expected do
+      {:ok, dest, call} = SelectorWorker.select_destination(selector, proxy_pass)
+      assert dest == i
+      assert is_function(call)
     end
 
-    assert actual == expected
   end
 end

@@ -13,6 +13,7 @@ defmodule ServiceGateway.RouterTest do
         %{
           name: "test1",
           route: ["/test/foo/"],
+          timeout: 1000,
           destinations: [%{url: "https://postman-echo.com/get", weight: 1}]
         }
       ]
@@ -24,6 +25,7 @@ defmodule ServiceGateway.RouterTest do
         %{
           name: "test2",
           route: ["/test/"],
+          timeout: 1000,
           destinations: []
         }
       ]
@@ -35,16 +37,19 @@ defmodule ServiceGateway.RouterTest do
         %{
           name: "test3.1",
           route: ["/random"],
+          timeout: 1000,
           destinations: []
         },
         %{
           name: "test3.2",
           route: ["/bar", "/test", "/test/foo/"],
+          timeout: 1000,
           destinations: [%{url: "https://postman-echo.com/get", weight: 1}]
         },
         %{
           name: "test3.3",
           route: ["/barrrr"],
+          timeout: 1000,
           destinations: []
         }
       ]

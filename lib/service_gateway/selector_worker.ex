@@ -5,16 +5,16 @@ defmodule ServiceGateway.SelectorWorker do
   alias ServiceGateway.ProxyPass.Destination
   # ===== Public API =====
   @doc """
-  Selects one of the available destinations from list and returns it `{:ok, "<url>"}`.
+  Selects one of the available destinations from list and returns it `{:ok, "<url>", call_wrapper}`.
   If all of the destinations are unavailable returns error `{:error, "Destinations are unavailable"}`
   """
-  @spec select_destination(ProxyPass.t(), timeout()) ::
-          {:ok, Destination.t()} | {:error, String.t()}
+  @spec select_destination(ProxyPass.t(), timeout()) :: {:ok, Destination.t()} | {:error, String.t()}
   def select_destination(server, proxy_pass, timeout \\ 500) do
     GenServer.call(server, proxy_pass, timeout)
   end
 
-  defp notify_destination_status(server, destination, status) do
+  @spec notify_destination_status(pid(), Destination.t(), :ok | :error) :: none()
+  def notify_destination_status(server, destination, status) do
     GenServer.cast(server, {destination, status})
   end
 
@@ -36,6 +36,11 @@ defmodule ServiceGateway.SelectorWorker do
     {count, updated_state} = inc_and_get(proxy_pass.name, proxy_pass.destinations, state)
     dest = do_select(proxy_pass.destinations, count)
     {:reply, {:ok, dest}, updated_state}
+  end
+
+  @impl true
+  def handle_cast(proxy_pass, state) do
+    {:noreply, state}
   end
 
   defp do_select(destinations, count) do

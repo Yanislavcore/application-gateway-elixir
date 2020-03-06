@@ -15,17 +15,20 @@ defmodule ServiceGateway.Router do
         destinations =
           group[:destinations]
           |> Enum.with_index(0)
-          |> Enum.map(fn {dest, i} ->
-            %Destination{
-              id: group.name <> "-" <> to_string(i),
-              url: dest.url,
-              weight: dest.weight
-            }
-          end)
+          |> Enum.map(
+               fn {dest, i} ->
+                 %Destination{
+                   id: group.name <> "-" <> to_string(i),
+                   url: dest.url,
+                   weight: dest.weight
+                 }
+               end
+             )
 
         %ProxyPass{
           name: group[:name],
           route_info: String.split(route, "/", trim: true),
+          timeout: group[:timeout],
           destinations: destinations
         }
       end
