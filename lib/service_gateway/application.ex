@@ -12,13 +12,13 @@ defmodule ServiceGateway.Application do
 
   defp selector_pool_spec do
     pool_config = [
-      name: {:local, selector_pool_name},
+      name: {:local, selector_pool_name()},
       worker_module: ServiceGateway.SelectorWorker,
       size: System.schedulers_online(),
       strategy: :fifo
     ]
 
-    :poolboy.child_spec(selector_pool_name, pool_config, [])
+    :poolboy.child_spec(selector_pool_name(), pool_config, [])
   end
 
   defp cowboy_spec do

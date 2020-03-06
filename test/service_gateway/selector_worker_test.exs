@@ -1,4 +1,4 @@
-defmodule ServiceGateway.SelectorTest do
+defmodule ServiceGateway.SelectorWorkerTest do
   @moduledoc false
   use ExUnit.Case, async: false
   alias ServiceGateway.SelectorWorker
