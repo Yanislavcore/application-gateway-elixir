@@ -11,8 +11,9 @@ defmodule ServiceGateway.RouterTest do
       "/test/foo/",
       [
         %{
+          name: "test1",
           route: ["/test/foo/"],
-          destinations: []
+          destinations: [%{url: "https://postman-echo.com/get", weight: 1}]
         }
       ]
     },
@@ -21,6 +22,7 @@ defmodule ServiceGateway.RouterTest do
       "/test/",
       [
         %{
+          name: "test2",
           route: ["/test/"],
           destinations: []
         }
@@ -31,7 +33,18 @@ defmodule ServiceGateway.RouterTest do
       "/test",
       [
         %{
+          name: "test3.1",
+          route: ["/random"],
+          destinations: []
+        },
+        %{
+          name: "test3.2",
           route: ["/bar", "/test", "/test/foo/"],
+          destinations: [%{url: "https://postman-echo.com/get", weight: 1}]
+        },
+        %{
+          name: "test3.3",
+          route: ["/barrrr"],
           destinations: []
         }
       ]
@@ -45,7 +58,7 @@ defmodule ServiceGateway.RouterTest do
       uri_split = String.split(uri, "/", trim: true)
       Application.put_env(ServiceGateway.Application, :routes, config)
       load_routes()
-      assert {:ok, {^expected_split, _}} = find_destination(uri_split)
+      assert {:ok, %{route_info: ^expected_split}} = find_proxy_pass(uri_split)
     end
   end
 end

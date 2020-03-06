@@ -10,6 +10,7 @@ config ServiceGateway.Application,
   },
   routes: [
     %{
+      name: "postman_echo",
       route: ["/get_echo"],
       destinations: [
         %{url: "https://postman-echo.com/get", weight: 1},
