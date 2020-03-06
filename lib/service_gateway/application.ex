@@ -22,7 +22,7 @@ defmodule ServiceGateway.Application do
   end
 
   defp cowboy_spec do
-    port = Application.fetch_env!(ServiceGateway.Application, :port)
+    port = Application.fetch_env!(:service_gateway, :port)
 
     {
       Plug.Cowboy,

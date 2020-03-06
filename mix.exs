@@ -3,7 +3,7 @@ defmodule ServiceGateway.MixProject do
 
   def project do
     [
-      app: ServiceGateway.Application,
+      app: :service_gateway,
       version: "0.1.0",
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,

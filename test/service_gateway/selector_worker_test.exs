@@ -27,9 +27,8 @@ defmodule ServiceGateway.SelectorWorkerTest do
       |> List.flatten()
 
     for i <- expected do
-      {:ok, dest, call} = SelectorWorker.select_destination(selector, proxy_pass)
+      {:ok, dest} = SelectorWorker.select_destination(selector, proxy_pass)
       assert dest == i
-      assert is_function(call)
     end
   end
 end

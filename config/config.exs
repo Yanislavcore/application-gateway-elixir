@@ -4,7 +4,7 @@ config :logger, :console,
   format: "[$level] $metadata$message\n",
   metadata: [:module, :function, :my_id]
 
-config ServiceGateway.Application,
+config :service_gateway,
   port: 8080,
   rate_limiting: %{
     windows: 3,

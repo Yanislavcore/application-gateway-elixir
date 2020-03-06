@@ -61,7 +61,7 @@ defmodule ServiceGateway.RouterTest do
       {uri, expected, config} = context.registered.triple
       expected_split = String.split(expected, "/", trim: true)
       uri_split = String.split(uri, "/", trim: true)
-      Application.put_env(ServiceGateway.Application, :routes, config)
+      Application.put_env(:service_gateway, :routes, config)
       load_routes()
       assert {:ok, %{route_info: ^expected_split}} = find_proxy_pass(uri_split)
     end

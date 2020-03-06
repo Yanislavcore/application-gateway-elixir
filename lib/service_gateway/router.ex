@@ -10,7 +10,7 @@ defmodule ServiceGateway.Router do
   @spec load_routes() :: none()
   def load_routes() do
     all_routes =
-      for group <- Application.fetch_env!(ServiceGateway.Application, :routes),
+      for group <- Application.fetch_env!(:service_gateway, :routes),
           route <- group[:route] do
         destinations =
           group[:destinations]
@@ -31,7 +31,7 @@ defmodule ServiceGateway.Router do
         }
       end
 
-    :ok = Application.put_env(ServiceGateway.Application, :routes_prepared, all_routes)
+    :ok = Application.put_env(:service_gateway, :routes_prepared, all_routes)
   end
 
   @doc """
@@ -40,7 +40,7 @@ defmodule ServiceGateway.Router do
   @spec find_proxy_pass([String.t()]) :: {:ok, ProxyPass.t()} | {:error, :not_found}
   def find_proxy_pass(path_info) do
     res =
-      Application.fetch_env!(ServiceGateway.Application, :routes_prepared)
+      Application.fetch_env!(:service_gateway, :routes_prepared)
       |> Enum.find(fn %{route_info: route_info} -> List.starts_with?(path_info, route_info) end)
 
     if res do
