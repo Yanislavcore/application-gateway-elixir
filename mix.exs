@@ -29,7 +29,8 @@ defmodule ServiceGateway.MixProject do
       {:mojito, "~> 0.6.1"},
       {:poolboy, "~> 1.5"},
       {:mox, "~> 0.5", only: :test},
-      {:mock, "~> 0.3.0", only: :test}
+      {:mock, "~> 0.3.0", only: :test},
+      {:fake_server, "~> 2.1", only: :test}
     ]
   end
 

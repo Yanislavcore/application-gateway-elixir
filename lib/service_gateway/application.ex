@@ -1,14 +1,7 @@
 defmodule ServiceGateway.Application do
   @moduledoc false
   use Application
-
-  #  def rate_limit_cache_name do
-  #    :rate_limit_cache
-  #  end
-
-  def selector_pool_name do
-    :selector_pool
-  end
+  import ServiceGateway.Utils.Constants
 
   defp selector_pool_spec do
     pool_config = [

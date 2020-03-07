@@ -1,4 +1,4 @@
-defmodule SelectorWorkerMock do
+defmodule GenServerMock do
   @moduledoc false
 
   use GenServer

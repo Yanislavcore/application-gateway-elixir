@@ -4,7 +4,7 @@ defmodule ServiceGateway.Selector do
   alias ServiceGateway.ProxyPass
   alias ServiceGateway.SelectorWorker
   alias ServiceGateway.ProxyPass.Destination
-  import ServiceGateway.Application, only: [selector_pool_name: 0]
+  import ServiceGateway.Utils.Constants, only: [selector_pool_name: 0]
   # ===== Public API =====
   @doc """
   Selects one of the available destinations from list and returns it `{:ok, "<url>"}`.

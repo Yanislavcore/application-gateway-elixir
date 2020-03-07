@@ -5,6 +5,9 @@ config :logger, :console,
   metadata: [:module, :function, :my_id]
 
 config :service_gateway,
+  constants: %{
+    selector_pool_name: :selector_pool
+  },
   port: 8080,
   rate_limiting: %{
     windows: 3,

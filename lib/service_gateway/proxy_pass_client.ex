@@ -5,7 +5,8 @@ defmodule ServiceGateway.ProxyPassClient do
   import Plug.Conn
   require Logger
 
-  @spec request_proxy_pass(Plug.Conn.t(), ProxyPass.t(), Destination.t()) :: Mojito.Response.t()
+  @spec request_proxy_pass(Plug.Conn.t(), ProxyPass.t(), Destination.t()) ::
+          {:ok, Mojito.Response.t()} | {:error, %Mojito.Error{}}
   def request_proxy_pass(conn, pass, dest) do
     req = build_request(conn, pass, dest)
     Logger.debug("Request to proxy pass: " <> inspect(req, pretty: false))
@@ -19,7 +20,8 @@ defmodule ServiceGateway.ProxyPassClient do
       url: build_url(conn, pass, dest),
       method: conn.method,
       headers: get_headers(conn),
-      body: get_body(conn)
+      body: get_body(conn),
+      opts: Keyword.new([{:timeout, pass.timeout}])
     }
   end
 
@@ -43,7 +45,14 @@ defmodule ServiceGateway.ProxyPassClient do
       Enum.drop(conn.path_info, length(pass.route_info))
       |> Enum.join("/")
 
-    base <> suffix
+    query_part =
+      if conn.query_string == "" do
+        ""
+      else
+        "?" <> conn.query_string
+      end
+
+    base <> suffix <> query_part
   end
 
   defp headless?(method) do
