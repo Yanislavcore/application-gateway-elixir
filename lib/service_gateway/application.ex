@@ -11,7 +11,8 @@ defmodule ServiceGateway.Application do
       strategy: :fifo
     ]
 
-    :poolboy.child_spec(selector_pool_name(), pool_config, [])
+    workers_config = Application.fetch_env!(:service_gateway, :routes_prepared)
+    :poolboy.child_spec(selector_pool_name(), pool_config, workers_config)
   end
 
   defp cowboy_spec do
@@ -42,7 +43,6 @@ defmodule ServiceGateway.Application do
 
   def start(_type, _args) do
     children = [
-      #      ,
       selector_pool_spec(),
       cowboy_spec()
     ]

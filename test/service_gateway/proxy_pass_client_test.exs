@@ -21,7 +21,7 @@ defmodule ServiceGateway.ProxyPassClientTest do
 
     result =
       C.request_proxy_pass(
-        conn_base,
+        conn_base(),
         %PP{
           name: "foo_bar_proxy_pass",
           route_info: ["prefix"],
@@ -37,7 +37,6 @@ defmodule ServiceGateway.ProxyPassClientTest do
 
     {:ok, resp} = result
     [endpoint_request] = Agent.get(__MODULE__, fn res -> res end)
-    IO.inspect(endpoint_request)
     assert FakeServer.hits(test_route) == 1
     assert FakeServer.hits() == 1
     assert %Mojito.Response{status_code: 200, body: "stubbed"} = resp
@@ -46,14 +45,14 @@ defmodule ServiceGateway.ProxyPassClientTest do
     assert Enum.filter(
              endpoint_request.headers,
              fn {k, v} ->
-               !Enum.any?(conn_base.req_headers, fn {ek, ev} -> k == ek and v == ev end)
+               !Enum.any?(conn_base().req_headers, fn {ek, ev} -> k == ek and v == ev end)
              end
-           ) -- [conn_base.req_headers] == [
+           ) -- [conn_base().req_headers] == [
              {"content-length", "0"},
              {"x-forwarded-for", "20.20.20.1"}
            ]
 
-    assert endpoint_request.query_string == conn_base.query_string
+    assert endpoint_request.query_string == conn_base().query_string
     assert endpoint_request.path == "/config_pref/should/be/routed/here"
   end
 

@@ -6,7 +6,8 @@ config :logger, :console,
 
 config :service_gateway,
   constants: %{
-    selector_pool_name: :selector_pool
+    selector_pool_name: :selector_pool,
+    destination_status_table_name: :destination_status
   },
   port: 8080,
   rate_limiting: %{

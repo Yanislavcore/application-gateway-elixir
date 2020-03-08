@@ -28,11 +28,11 @@ defmodule ServiceGateway.Selector do
     )
   end
 
-  @spec notify_destination_status(Destination.t(), :ok | :error) :: none()
-  def notify_destination_status(destination, status) do
+  @spec notify_destination_status(ProxyPass.t(), Destination.t(), :healthy | :unhealthy) :: none()
+  def notify_destination_status(proxy_pass, destination, status) do
     :poolboy.transaction(
       selector_pool_name(),
-      fn s -> SelectorWorker.notify_destination_status(s, destination, status) end,
+      fn s -> SelectorWorker.notify_destination_status(s, proxy_pass, destination, status) end,
       500
     )
   end

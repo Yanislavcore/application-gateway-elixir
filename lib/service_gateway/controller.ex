@@ -13,19 +13,17 @@ defmodule ServiceGateway.Controller do
   end
 
   def call(conn, _opts) do
-    IO.inspect(conn)
-    send_resp(conn, 200, inspect(conn))
-    #    Logger.debug("Incoming request " <> inspect(conn))
-    #
-    #    case Router.find_proxy_pass(conn.path_info) do
-    #      {:ok, pass} ->
-    #        Logger.debug("Route found: " <> inspect(pass))
-    #        call_proxy_pass(conn, pass)
-    #
-    #      {:error, :not_found} ->
-    #        Logger.warn("Calling for not existed route.")
-    #        response_error(conn, 404, "Not found")
-    #    end
+    Logger.debug("Incoming request " <> inspect(conn))
+
+    case Router.find_proxy_pass(conn.path_info) do
+      {:ok, pass} ->
+        Logger.debug("Route found: " <> inspect(pass))
+        call_proxy_pass(conn, pass)
+
+      {:error, :not_found} ->
+        Logger.warn("Calling for not existed route #{conn.request_path}.")
+        response_error(conn, 404, "Not found")
+    end
   end
 
   defp call_proxy_pass(conn, pass) do

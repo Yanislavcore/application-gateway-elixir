@@ -19,7 +19,12 @@ defmodule ServiceGateway.Router do
             %Destination{
               id: group.name <> "-" <> to_string(i),
               url: dest.url,
-              weight: dest.weight
+              weight: dest.weight,
+              healthcheck_url: Map.get(dest, :healthcheck_url, dest.url),
+              healthcheck_interval: Map.get(dest, :healthcheck_interval, 5000),
+              threshold_interval: Map.get(dest, :threshold_interval, 15000),
+              healthy_threshold: Map.get(dest, :healthy_threshold, 1),
+              failed_threshold: Map.get(dest, :failed_threshold, 1)
             }
           end)
 
