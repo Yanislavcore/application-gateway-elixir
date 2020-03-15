@@ -4,6 +4,7 @@ defmodule ServiceGateway.SelectorWorker do
   require Logger
   alias ServiceGateway.ProxyPass
   alias ServiceGateway.ProxyPass.Destination
+  alias ServiceGateway.Utils.TimeMachine
   # ===== Public API =====
   @doc """
   Selects one of the available destinations from list and returns it `{:ok, "<url>", call_wrapper}`.
@@ -142,11 +143,11 @@ defmodule ServiceGateway.SelectorWorker do
     %{events: events, status: current} = Map.get(destination_status, destination.id)
 
     should_be_after =
-      DateTime.to_unix(DateTime.utc_now(), :millisecond) - destination.threshold_interval
+      TimeMachine.utc_now_millis() - destination.threshold_interval
 
     updated_events =
-      [{new_status, DateTime.utc_now()} | events]
-      |> Enum.filter(fn {_, t} -> DateTime.to_unix(t, :millisecond) >= should_be_after end)
+      [{new_status, TimeMachine.utc_now_millis()} | events]
+      |> Enum.filter(fn {_, t} -> t >= should_be_after end)
       |> Enum.take(destination.healthy_threshold + destination.failed_threshold)
 
     last_series_length =
