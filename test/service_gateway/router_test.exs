@@ -2,6 +2,7 @@ defmodule ServiceGateway.RouterTest do
   @moduledoc false
   use ExUnit.Case, async: false
   import ServiceGateway.Router
+  alias ServiceGateway.Utils.ConfigLoader
 
   ExUnit.Case.register_attribute(__ENV__, :triple)
 
@@ -62,7 +63,7 @@ defmodule ServiceGateway.RouterTest do
       expected_split = String.split(expected, "/", trim: true)
       uri_split = String.split(uri, "/", trim: true)
       Application.put_env(:service_gateway, :routes, config)
-      load_routes()
+      ConfigLoader.load_config()
       assert {:ok, %{route_info: ^expected_split}} = find_proxy_pass(uri_split)
     end
   end

@@ -1,7 +1,9 @@
 defmodule ServiceGateway.Application do
   @moduledoc false
   use Application
+  alias ServiceGateway.Utils.ConfigLoader
   import ServiceGateway.Utils.Constants
+  import Logger
 
   defp selector_pool_spec do
     pool_config = [
@@ -17,7 +19,7 @@ defmodule ServiceGateway.Application do
 
   defp cowboy_spec do
     port = Application.fetch_env!(:service_gateway, :port)
-
+    Logger.info("Starting app on #{port} port!")
     {
       Plug.Cowboy,
       scheme: :http,
@@ -28,20 +30,8 @@ defmodule ServiceGateway.Application do
     }
   end
 
-  #  defp rate_limit_cache_spec do
-  #    # TODO
-  #    %{cache_entries_limit: cache_entries_limit} =
-  #      Application.fetch_env!(ServiceGateway.Application, :rate_limiting)
-  #
-  #    [
-  #      %{
-  #        id: rate_limit_cache_name(),
-  #        start: {Cachex, :start_link, [rate_limit_cache_name(), [limit: cache_entries_limit]]}
-  #      }
-  #    ]
-  #  end
-
   def start(_type, _args) do
+    ConfigLoader.load_config()
     children = [
       selector_pool_spec(),
       cowboy_spec()
