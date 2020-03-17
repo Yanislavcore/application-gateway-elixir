@@ -17,6 +17,7 @@ defmodule ServiceGateway.Utils.ConfigLoader do
             %Destination{
               id: group.name <> "-" <> to_string(i),
               url: dest.url,
+              timeout: Map.get(dest, :timeout, 10000),
               weight: dest.weight,
               healthcheck_url: Map.get(dest, :healthcheck_url, dest.url),
               healthcheck_interval: Map.get(dest, :healthcheck_interval, 5000),
@@ -29,7 +30,6 @@ defmodule ServiceGateway.Utils.ConfigLoader do
         %ProxyPass{
           name: group[:name],
           route_info: String.split(route, "/", trim: true),
-          timeout: group[:timeout],
           destinations: destinations
         }
       end

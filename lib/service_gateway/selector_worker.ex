@@ -142,8 +142,7 @@ defmodule ServiceGateway.SelectorWorker do
     destination_status = Map.get(state, proxy_pass.name)
     %{events: events, status: current} = Map.get(destination_status, destination.id)
 
-    should_be_after =
-      TimeMachine.utc_now_millis() - destination.threshold_interval
+    should_be_after = TimeMachine.utc_now_millis() - destination.threshold_interval
 
     updated_events =
       [{new_status, TimeMachine.utc_now_millis()} | events]

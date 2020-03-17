@@ -20,6 +20,7 @@ defmodule ServiceGateway.Application do
   defp cowboy_spec do
     port = Application.fetch_env!(:service_gateway, :port)
     Logger.info("Starting app on #{port} port!")
+
     {
       Plug.Cowboy,
       scheme: :http,
@@ -32,6 +33,7 @@ defmodule ServiceGateway.Application do
 
   def start(_type, _args) do
     ConfigLoader.load_config()
+
     children = [
       selector_pool_spec(),
       cowboy_spec()

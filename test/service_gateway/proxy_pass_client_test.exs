@@ -25,13 +25,13 @@ defmodule ServiceGateway.ProxyPassClientTest do
         %PP{
           name: "foo_bar_proxy_pass",
           route_info: ["prefix"],
-          destinations: [],
-          timeout: 5000
+          destinations: []
         },
         %D{
           id: "foo_bar_proxy_pass-0",
           url: "http://#{FakeServer.address()}/config_pref",
-          weight: 1
+          weight: 1,
+          timeout: 5000
         }
       )
 

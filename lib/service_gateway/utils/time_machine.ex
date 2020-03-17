@@ -8,5 +8,4 @@ defmodule ServiceGateway.Utils.TimeMachine do
   def utc_now_millis() do
     DateTime.to_unix(DateTime.utc_now(), :millisecond)
   end
-
 end

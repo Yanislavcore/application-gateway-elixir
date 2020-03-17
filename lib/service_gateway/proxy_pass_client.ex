@@ -21,7 +21,7 @@ defmodule ServiceGateway.ProxyPassClient do
       method: conn.method,
       headers: get_headers(conn),
       body: get_body(conn),
-      opts: Keyword.new([{:timeout, pass.timeout}])
+      opts: Keyword.new([{:timeout, dest.timeout}])
     }
   end
 
